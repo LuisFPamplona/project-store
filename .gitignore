@@ -1,0 +1,41 @@
+# dependencies
+node_modules
+
+# env
+.env
+.env.*
+
+# build
+dist
+build
+
+# logs
+logs
+*.log
+npm-debug.log*
+
+# coverage
+coverage
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode
+.idea
+
+# prisma
+prisma/migrations
+server/src/generated
+node_modules/.prisma
+.prisma
+
+# client
+client/node_modules
+client/dist
+client/build
+
+# server
+server/node_modules
+server/dist
