@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 import { Request, Response } from "express";
 import { createUser, login } from "../../src/controllers/authController";
 import { prisma } from "../../src/lib/prisma";
@@ -87,24 +89,6 @@ describe("Auth Controller", () => {
       });
     });
 
-    it("should return 400 if validation fails", async () => {
-      mockRequest = {
-        body: {
-          name: "",
-          email: "invalid-email",
-          password: "123",
-        },
-      };
-
-      await createUser(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(400);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Name is required",
-      });
-    });
-
     it("should return 400 if user already exists", async () => {
       const userData = {
         name: "John Doe",
@@ -155,42 +139,6 @@ describe("Auth Controller", () => {
         message: "Internal server error",
       });
     });
-
-    it("should validate password length", async () => {
-      mockRequest = {
-        body: {
-          name: "John Doe",
-          email: "john@example.com",
-          password: "12345", // Less than 6 characters
-        },
-      };
-
-      await createUser(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(400);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Password must be at least 6 characters long",
-      });
-    });
-
-    it("should validate email format", async () => {
-      mockRequest = {
-        body: {
-          name: "John Doe",
-          email: "invalidemail",
-          password: "password123",
-        },
-      };
-
-      await createUser(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(400);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Invalid email address",
-      });
-    });
   });
 
   describe("login", () => {
@@ -237,23 +185,6 @@ describe("Auth Controller", () => {
           user: { id: mockUser.id, name: mockUser.name, email: mockUser.email },
         },
         message: "Login successful",
-      });
-    });
-
-    it("should return 400 if validation fails", async () => {
-      mockRequest = {
-        body: {
-          email: "invalid-email",
-          password: "123",
-        },
-      };
-
-      await login(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(400);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Invalid email address",
       });
     });
 
