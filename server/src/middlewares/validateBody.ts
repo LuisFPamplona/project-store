@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { AppError } from "../errors/AppError";
 
 export const validateBody = (schema: any) => {
   return (req: Request, res: Response, next: NextFunction) => {
