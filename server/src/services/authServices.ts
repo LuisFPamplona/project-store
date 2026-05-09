@@ -1,6 +1,5 @@
 import { AppError } from "../errors/AppError";
 import { prisma } from "../lib/prisma";
-import { createUserSchema, loginUserSchema } from "../schemas/auth.schemas";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -50,9 +49,16 @@ export const loginService = async (email: string, password: string) => {
     throw new AppError("Invalid credentials", 401);
   }
 
-  const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-    expiresIn: "1h",
-  });
+  const token = jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    JWT_SECRET,
+    {
+      expiresIn: "1h",
+    },
+  );
 
-  return { token, user: { id: user.id, name: user.name, email: user.email } };
+  return {
+    token,
+    user: { id: user.id, name: user.name, email: user.email, role: user.role },
+  };
 };
