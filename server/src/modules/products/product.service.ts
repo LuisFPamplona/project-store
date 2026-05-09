@@ -1,3 +1,4 @@
+import { AppError } from "../../errors/AppError";
 import { prisma } from "../../lib/prisma";
 
 export const getProductsService = async (
@@ -54,7 +55,7 @@ export const deleteProductService = async (id: string) => {
   });
 
   if (!product) {
-    throw new Error("Product not found");
+    throw new AppError("Product not found", 404);
   }
 
   const deletedProduct = await prisma.product.delete({
@@ -75,11 +76,11 @@ export const editProductService = async (
   });
 
   if (!product) {
-    throw new Error("Product not found");
+    throw new AppError("Product not found", 404);
   }
 
   if (!name && !description && !price) {
-    throw new Error("At least one field must be provided for update");
+    throw new AppError("At least one field must be provided for update", 400);
   }
 
   const updatedProduct = await prisma.product.update({

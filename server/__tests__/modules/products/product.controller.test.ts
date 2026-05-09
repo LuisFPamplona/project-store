@@ -113,13 +113,9 @@ describe("Product Controller", () => {
         query: {},
       };
 
-      await getProducts(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(500);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Internal server error",
-      });
+      await expect(
+        getProducts(mockRequest as Request, mockResponse as Response),
+      ).rejects.toThrow("Database error");
     });
 
     it("should return error when no products found", async () => {
@@ -129,13 +125,9 @@ describe("Product Controller", () => {
         query: {},
       };
 
-      await getProducts(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(500);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Internal server error",
-      });
+      await expect(
+        getProducts(mockRequest as Request, mockResponse as Response),
+      ).rejects.toThrow("No products found");
     });
   });
 
@@ -188,13 +180,9 @@ describe("Product Controller", () => {
         },
       };
 
-      await createProduct(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(500);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Internal server error",
-      });
+      await expect(
+        createProduct(mockRequest as Request, mockResponse as Response),
+      ).rejects.toThrow("Database error");
     });
   });
 
@@ -236,13 +224,9 @@ describe("Product Controller", () => {
         params: { id: "1" },
       };
 
-      await deleteProduct(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(500);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Internal server error",
-      });
+      await expect(
+        deleteProduct(mockRequest as Request, mockResponse as Response),
+      ).rejects.toThrow("Product not found");
     });
   });
 
@@ -305,13 +289,9 @@ describe("Product Controller", () => {
         },
       };
 
-      await editProduct(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(500);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Internal server error",
-      });
+      await expect(
+        editProduct(mockRequest as Request, mockResponse as Response),
+      ).rejects.toThrow("Product not found");
     });
 
     it("should return error when no fields provided", async () => {
@@ -329,13 +309,9 @@ describe("Product Controller", () => {
         body: {},
       };
 
-      await editProduct(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(500);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Internal server error",
-      });
+      await expect(
+        editProduct(mockRequest as Request, mockResponse as Response),
+      ).rejects.toThrow("At least one field must be provided for update");
     });
   });
 });

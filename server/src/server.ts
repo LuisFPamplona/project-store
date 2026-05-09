@@ -4,6 +4,7 @@ import userRoutes from "./modules/users/user.routes";
 import productsRoutes from "./modules/products/product.routes";
 import cartItemRoutes from "./modules/cart-items/cartItem.routes";
 import cartRoutes from "./modules/cart/cart.routes";
+import { errorHandler } from "./errors/errorHandler";
 
 const PORT = process.env.PORT || 3000;
 
@@ -20,6 +21,8 @@ app.use("/api/products", productsRoutes);
 app.use("/api/cart-items", cartItemRoutes);
 
 app.use("/api/cart", cartRoutes);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

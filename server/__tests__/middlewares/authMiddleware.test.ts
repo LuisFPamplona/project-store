@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { authMiddleware } from "../../src/middlewares/authMiddleware";
 import jwt from "jsonwebtoken";
 
+process.env.JWT_SECRET = "test_secret";
+
 jest.mock("jsonwebtoken", () => ({
   verify: jest.fn(),
 }));
@@ -93,10 +95,7 @@ describe("authMiddleware", () => {
 
     authMiddleware(mockRequest as Request, mockResponse as Response, nextMock);
 
-    expect(jwt.verify).toHaveBeenCalledWith(
-      "validtoken",
-      "your_jwt_secret_key",
-    );
+    expect(jwt.verify).toHaveBeenCalledWith("validtoken", "test_secret");
     expect((mockRequest as any).user).toEqual(decodedUser);
     expect(nextMock).toHaveBeenCalled();
     expect(statusMock).not.toHaveBeenCalled();
