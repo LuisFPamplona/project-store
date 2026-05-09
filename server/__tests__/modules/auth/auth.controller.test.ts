@@ -1,5 +1,7 @@
 /// <reference types="jest" />
 
+process.env.JWT_SECRET = "test_secret";
+
 import { Request, Response } from "express";
 import { createUser, login } from "../../../src/modules/auth/auth.controller";
 import { prisma } from "../../../src/lib/prisma";
@@ -105,16 +107,9 @@ describe("Auth Controller", () => {
         id: "existing-id",
       });
 
-      await createUser(mockRequest as Request, mockResponse as Response);
-
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({
-        where: { email: userData.email },
-      });
-      expect(statusMock).toHaveBeenCalledWith(400);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "User already exists",
-      });
+      await expect(
+        createUser(mockRequest as Request, mockResponse as Response),
+      ).rejects.toThrow("User already exists");
     });
 
     it("should return 500 on internal error", async () => {
@@ -132,13 +127,9 @@ describe("Auth Controller", () => {
         new Error("Database error"),
       );
 
-      await createUser(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(500);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Internal server error",
-      });
+      await expect(
+        createUser(mockRequest as Request, mockResponse as Response),
+      ).rejects.toThrow("Database error");
     });
   });
 
@@ -158,6 +149,7 @@ describe("Auth Controller", () => {
         name: "John Doe",
         email: loginData.email,
         password: "hashedPassword",
+        role: "USER",
       };
 
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
@@ -174,7 +166,7 @@ describe("Auth Controller", () => {
         mockUser.password,
       );
       expect(jwt.sign).toHaveBeenCalledWith(
-        { id: mockUser.id, email: mockUser.email },
+        { id: mockUser.id, email: mockUser.email, role: mockUser.role },
         expect.any(String), // Assuming JWT_SECRET is set
         { expiresIn: expect.any(String) },
       );
@@ -183,7 +175,12 @@ describe("Auth Controller", () => {
         success: true,
         data: {
           token: "mock-token",
-          user: { id: mockUser.id, name: mockUser.name, email: mockUser.email },
+          user: {
+            id: mockUser.id,
+            name: mockUser.name,
+            email: mockUser.email,
+            role: mockUser.role,
+          },
         },
         message: "Login successful",
       });
@@ -201,13 +198,9 @@ describe("Auth Controller", () => {
 
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
 
-      await login(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(401);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Invalid credentials",
-      });
+      await expect(
+        login(mockRequest as Request, mockResponse as Response),
+      ).rejects.toThrow("Invalid credentials");
     });
 
     it("should return 401 if password is incorrect", async () => {
@@ -229,13 +222,9 @@ describe("Auth Controller", () => {
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await login(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(401);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Invalid credentials",
-      });
+      await expect(
+        login(mockRequest as Request, mockResponse as Response),
+      ).rejects.toThrow("Invalid credentials");
     });
 
     it("should return 500 on internal error", async () => {
@@ -252,13 +241,9 @@ describe("Auth Controller", () => {
         new Error("Database error"),
       );
 
-      await login(mockRequest as Request, mockResponse as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(500);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Internal server error",
-      });
+      await expect(
+        login(mockRequest as Request, mockResponse as Response),
+      ).rejects.toThrow("Database error");
     });
   });
 });
