@@ -1,5 +1,5 @@
-import { AppError } from "../errors/AppError";
-import { prisma } from "../lib/prisma";
+import { AppError } from "../../errors/AppError";
+import { prisma } from "../../lib/prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -25,6 +25,7 @@ export const register = async (
       name,
       email,
       password: hashedPassword,
+      cart: { create: {} },
     },
     select: { id: true, name: true, email: true },
   });

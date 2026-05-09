@@ -1,12 +1,12 @@
 /// <reference types="jest" />
 
 import { Request, Response } from "express";
-import { createUser, login } from "../../src/controllers/authController";
-import { prisma } from "../../src/lib/prisma";
+import { createUser, login } from "../../../src/modules/auth/auth.controller";
+import { prisma } from "../../../src/lib/prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-jest.mock("../../src/lib/prisma", () => ({
+jest.mock("../../../src/lib/prisma", () => ({
   prisma: {
     user: {
       findUnique: jest.fn(),
@@ -74,6 +74,7 @@ describe("Auth Controller", () => {
           name: userData.name,
           email: userData.email,
           password: "hashedPassword",
+          cart: { create: {} },
         },
         select: { id: true, name: true, email: true },
       });

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { roleService } from "../services/userServices";
+import { roleService } from "./user.service";
 
 export const changeUserRole = async (req: Request, res: Response) => {
   const { id } = req.params;

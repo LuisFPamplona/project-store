@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { AppError } from "../errors/AppError";
+import { AppError } from "../../errors/AppError";
 import {
   createProductService,
   deleteProductService,
   editProductService,
   getProductsService,
-} from "../services/productServices";
+} from "./product.service";
 
 export const getProducts = async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
