@@ -95,7 +95,7 @@ describe("authMiddleware", () => {
 
     expect(jwt.verify).toHaveBeenCalledWith(
       "validtoken",
-      process.env.JWT_SECRET,
+      "your_jwt_secret_key",
     );
     expect((mockRequest as any).user).toEqual(decodedUser);
     expect(nextMock).toHaveBeenCalled();

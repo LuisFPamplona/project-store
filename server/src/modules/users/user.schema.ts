@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Role } from "../enums/role.enum";
+import { Role } from "../../enums/role.enum";
 
 export const updateUserSchema = z.object({
   name: z.string().min(1, "Name is required").optional(),

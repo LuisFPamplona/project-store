@@ -1,17 +1,14 @@
 import { Router } from "express";
-import { authMiddleware } from "../middlewares/authMiddleware";
-import { adminMiddleware } from "../middlewares/adminMiddleware";
-import { validateBody } from "../middlewares/validateBody";
-import {
-  createProductSchema,
-  editProductSchema,
-} from "../schemas/product.schema";
+import { authMiddleware } from "../../middlewares/authMiddleware";
+import { adminMiddleware } from "../../middlewares/adminMiddleware";
+import { validateBody } from "../../middlewares/validateBody";
+import { createProductSchema, editProductSchema } from "./product.schema";
 import {
   createProduct,
   deleteProduct,
   editProduct,
   getProducts,
-} from "../controllers/productsController";
+} from "./product.controller";
 
 const router = Router();
 

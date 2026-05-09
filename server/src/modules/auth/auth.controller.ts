@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { loginService, register } from "../services/authServices";
-import { AppError } from "../errors/AppError";
+import { loginService, register } from "./auth.service";
+import { AppError } from "../../errors/AppError";
 
 export const createUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;

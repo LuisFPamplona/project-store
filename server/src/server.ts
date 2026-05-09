@@ -1,7 +1,9 @@
 import express from "express";
-import authRoutes from "./routes/authRoutes";
-import userRoutes from "./routes/userRoutes";
-import productsRoutes from "./routes/productsRoutes";
+import authRoutes from "./modules/auth/auth.routes";
+import userRoutes from "./modules/users/user.routes";
+import productsRoutes from "./modules/products/product.routes";
+import cartItemRoutes from "./modules/cart-items/cartItem.routes";
+import cartRoutes from "./modules/cart/cart.routes";
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,6 +17,9 @@ app.use("/api/sessions", authRoutes);
 
 app.use("/api/products", productsRoutes);
 
+app.use("/api/cart-items", cartItemRoutes);
+
+app.use("/api/cart", cartRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
