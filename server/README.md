@@ -28,7 +28,6 @@ src/
 ├── modules/
 │   ├── auth/                # Módulo de autenticação
 │   ├── cart/                # Módulo do carrinho
-│   ├── cart-items/          # Módulo de itens do carrinho
 │   ├── products/            # Módulo de produtos
 │   └── users/               # Módulo de usuários
 └── server.ts                # Arquivo principal do servidor
@@ -125,7 +124,9 @@ npm test
 ### Carrinho (requer autenticação)
 
 - `GET /api/cart` - Ver carrinho do usuário
-- `POST /api/cart-items` - Adicionar item ao carrinho
+- `POST /api/cart` - Adicionar item ao carrinho
+- `PATCH /api/cart/:id` - Editar item do carrinho
+- `DELETE /api/cart/:id` - Deletar item do carrinho
 
 ### Usuários (requer autenticação admin)
 

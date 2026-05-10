@@ -2,7 +2,6 @@ import express from "express";
 import authRoutes from "./modules/auth/auth.routes";
 import userRoutes from "./modules/users/user.routes";
 import productsRoutes from "./modules/products/product.routes";
-import cartItemRoutes from "./modules/cart-items/cartItem.routes";
 import cartRoutes from "./modules/cart/cart.routes";
 import { errorHandler } from "./errors/errorHandler";
 
@@ -17,8 +16,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/sessions", authRoutes);
 
 app.use("/api/products", productsRoutes);
-
-app.use("/api/cart-items", cartItemRoutes);
 
 app.use("/api/cart", cartRoutes);
 
