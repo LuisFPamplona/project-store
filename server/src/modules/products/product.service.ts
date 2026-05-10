@@ -27,7 +27,7 @@ export const getProductsService = async (
   });
 
   if (products.length === 0) {
-    throw new Error("No products found");
+    throw new AppError("No products found", 404);
   }
 
   return products;

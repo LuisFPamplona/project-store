@@ -1,5 +1,6 @@
 import { Response, Request, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { AppError } from "../errors/AppError";
 
 export const authMiddleware = (
   req: Request,
@@ -9,18 +10,14 @@ export const authMiddleware = (
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res
-      .status(401)
-      .json({ success: false, message: "No token provided" });
+    throw new AppError("No token provided", 401);
   }
 
   const token = authHeader.split(" ")[1];
   const JWT_SECRET = process.env.JWT_SECRET;
 
   if (!JWT_SECRET) {
-    return res
-      .status(500)
-      .json({ success: false, message: "Server configuration error" });
+    throw new AppError("Server configuration error", 500);
   }
 
   try {
@@ -30,6 +27,6 @@ export const authMiddleware = (
 
     next();
   } catch (error) {
-    return res.status(401).json({ success: false, message: "Invalid token" });
+    throw new AppError("Invalid token", 401);
   }
 };
