@@ -150,6 +150,7 @@ describe("Auth Controller", () => {
         email: loginData.email,
         password: "hashedPassword",
         role: "USER",
+        cart: { id: "cart-id" },
       };
 
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
@@ -158,15 +159,22 @@ describe("Auth Controller", () => {
 
       await login(mockRequest as Request, mockResponse as Response);
 
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({
-        where: { email: loginData.email },
-      });
+      expect(prisma.user.findUnique).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { email: loginData.email },
+        }),
+      );
       expect(bcrypt.compare).toHaveBeenCalledWith(
         loginData.password,
         mockUser.password,
       );
       expect(jwt.sign).toHaveBeenCalledWith(
-        { id: mockUser.id, email: mockUser.email, role: mockUser.role },
+        {
+          id: mockUser.id,
+          email: mockUser.email,
+          role: mockUser.role,
+          cartId: mockUser.cart.id,
+        },
         expect.any(String), // Assuming JWT_SECRET is set
         { expiresIn: expect.any(String) },
       );
@@ -180,6 +188,7 @@ describe("Auth Controller", () => {
             name: mockUser.name,
             email: mockUser.email,
             role: mockUser.role,
+            cartId: mockUser.cart.id,
           },
         },
         message: "Login successful",

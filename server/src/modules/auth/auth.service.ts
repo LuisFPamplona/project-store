@@ -42,9 +42,19 @@ export const register = async (
 };
 
 export const loginService = async (email: string, password: string) => {
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      password: true,
+      role: true,
+      cart: { select: { id: true } },
+    },
+  });
 
-  if (!user) {
+  if (!user || user.cart === null) {
     throw new AppError("Invalid credentials", 401);
   }
 
@@ -55,7 +65,7 @@ export const loginService = async (email: string, password: string) => {
   }
 
   const token = jwt.sign(
-    { id: user.id, email: user.email, role: user.role },
+    { id: user.id, email: user.email, role: user.role, cartId: user.cart.id },
     JWT_SECRET,
     {
       expiresIn: "1h",
@@ -64,6 +74,12 @@ export const loginService = async (email: string, password: string) => {
 
   return {
     token,
-    user: { id: user.id, name: user.name, email: user.email, role: user.role },
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      cartId: user.cart.id,
+    },
   };
 };

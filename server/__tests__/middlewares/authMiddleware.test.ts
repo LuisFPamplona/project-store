@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 import { Request, Response, NextFunction } from "express";
 import { authMiddleware } from "../../src/middlewares/authMiddleware";
 import jwt from "jsonwebtoken";
@@ -31,14 +32,13 @@ describe("authMiddleware", () => {
       headers: {},
     };
 
-    authMiddleware(mockRequest as Request, mockResponse as Response, nextMock);
-
-    expect(statusMock).toHaveBeenCalledWith(401);
-    expect(jsonMock).toHaveBeenCalledWith({
-      success: false,
-      message: "No token provided",
-    });
-    expect(nextMock).not.toHaveBeenCalled();
+    expect(() =>
+      authMiddleware(
+        mockRequest as Request,
+        mockResponse as Response,
+        nextMock,
+      ),
+    ).toThrow("No token provided");
   });
 
   it("should return 401 if authorization header does not have Bearer", () => {
@@ -52,14 +52,9 @@ describe("authMiddleware", () => {
       throw new Error("Invalid token");
     });
 
-    authMiddleware(mockRequest as Request, mockResponse as Response, nextMock);
-
-    expect(statusMock).toHaveBeenCalledWith(401);
-    expect(jsonMock).toHaveBeenCalledWith({
-      success: false,
-      message: "Invalid token",
-    });
-    expect(nextMock).not.toHaveBeenCalled();
+    expect(() =>
+      authMiddleware(mockRequest as Request, mockResponse as Response, nextMock),
+    ).toThrow("Invalid token");
   });
 
   it("should return 401 if token is invalid", () => {
@@ -73,18 +68,18 @@ describe("authMiddleware", () => {
       throw new Error("Invalid token");
     });
 
-    authMiddleware(mockRequest as Request, mockResponse as Response, nextMock);
-
-    expect(statusMock).toHaveBeenCalledWith(401);
-    expect(jsonMock).toHaveBeenCalledWith({
-      success: false,
-      message: "Invalid token",
-    });
-    expect(nextMock).not.toHaveBeenCalled();
+    expect(() =>
+      authMiddleware(
+        mockRequest as Request,
+        mockResponse as Response,
+        nextMock,
+      ),
+    ).toThrow("Invalid token");
   });
 
   it("should call next and set req.user if token is valid", () => {
     const decodedUser = { id: "user-id", email: "user@example.com" };
+
     mockRequest = {
       headers: {
         authorization: "Bearer validtoken",

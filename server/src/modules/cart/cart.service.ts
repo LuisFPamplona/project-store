@@ -23,5 +23,10 @@ export const getCartService = async (userId: string) => {
     throw new AppError("Cart not found", 404);
   }
 
-  return cart;
+  const totalPrices =
+    cart.cartItems.reduce((acc, item) => {
+      return acc + item.product.price * item.quantity;
+    }, 0) || 0;
+
+  return { ...cart, totalPrices };
 };

@@ -1,3 +1,5 @@
+import { set } from "zod";
+import { AppError } from "../../errors/AppError";
 import { prisma } from "../../lib/prisma";
 
 export const addToCardService = async (
@@ -39,4 +41,63 @@ export const addToCardService = async (
   });
 
   return newCartItem;
+};
+
+export const removeFromCartService = async (
+  productId: string,
+  userId: string,
+) => {
+  const cart = await prisma.cart.findUnique({
+    where: { userId },
+    select: { id: true },
+  });
+
+  if (!cart) {
+    throw new AppError("Cart not found", 404);
+  }
+
+  const product = await prisma.cartItem.findFirst({
+    where: { cartId: cart.id, productId },
+  });
+
+  if (!product) {
+    throw new AppError("Product not founded in cart", 404);
+  }
+
+  const deletedProduct = await prisma.cartItem.delete({
+    where: { id: product.id },
+  });
+
+  return deletedProduct;
+};
+
+export const updateCartItemService = async (
+  productId: string,
+  userId: string,
+  quantity: number,
+) => {
+  const cart = await prisma.cart.findUnique({
+    where: { userId },
+  });
+
+  if (!cart) {
+    throw new AppError("Cart not found", 404);
+  }
+
+  const cartItem = await prisma.cartItem.findFirst({
+    where: { cartId: cart.id, productId },
+  });
+
+  if (!cartItem) {
+    throw new AppError("Product not founded in cart", 404);
+  }
+
+  const updatedProduct = await prisma.cartItem.update({
+    where: { id: cartItem.id },
+    data: {
+      quantity,
+    },
+  });
+
+  return updatedProduct;
 };
