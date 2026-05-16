@@ -95,4 +95,18 @@ describe("authMiddleware", () => {
     expect(nextMock).toHaveBeenCalled();
     expect(statusMock).not.toHaveBeenCalled();
   });
+
+  it("throws when JWT_SECRET is not configured on the server", () => {
+    const original = process.env.JWT_SECRET;
+    delete process.env.JWT_SECRET;
+
+    const mockReq = { headers: { authorization: "Bearer token" } } as Request;
+    const mockRes = mockResponse as Response;
+
+    expect(() => authMiddleware(mockReq, mockRes, nextMock)).toThrow(
+      "Server configuration error",
+    );
+
+    process.env.JWT_SECRET = original;
+  });
 });

@@ -137,7 +137,6 @@ npm test
 - `POST /api/orders` - Criar pedido a partir do carrinho do usuário
 - `GET /api/orders` - Listar pedidos do usuário (admin vê todos)
 - `GET /api/orders/:id` - Obter detalhes de um pedido
- 
 
 ### Pagamentos (Payment) (requer autenticação)
 
