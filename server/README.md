@@ -17,20 +17,22 @@ Um servidor backend para uma loja online construído com Node.js, TypeScript, Ex
 ```
 src/
 ├── errors/
-│   ├── AppError.ts          # Classe customizada para erros
-│   └── errorHandler.ts      # Middleware global de tratamento de erros
+│   ├── AppError.ts
+│   └── errorHandler.ts
 ├── lib/
-│   └── prisma.ts            # Configuração do Prisma Client
+│   └── prisma.ts
 ├── middlewares/
-│   ├── adminMiddleware.ts   # Middleware para verificar permissões de admin
-│   ├── authMiddleware.ts    # Middleware de autenticação JWT
-│   └── validateBody.ts      # Middleware de validação de dados
+│   ├── adminMiddleware.ts
+│   ├── authMiddleware.ts
+│   └── validateBody.ts
 ├── modules/
-│   ├── auth/                # Módulo de autenticação
-│   ├── cart/                # Módulo do carrinho
-│   ├── products/            # Módulo de produtos
-│   └── users/               # Módulo de usuários
-└── server.ts                # Arquivo principal do servidor
+│   ├── auth/
+│   ├── users/
+│   ├── products/
+│   ├── cart/
+│   ├── orders/
+│   └── payment/
+└── server.ts
 ```
 
 ## 🏗️ Arquitetura
@@ -41,21 +43,21 @@ src/
 
 - **Error Handler Global**: Todos os erros são tratados por um middleware centralizado
 - **AppError Customizada**: Classe para erros de negócio com status codes específicos
-- **Controllers Limpos**: Sem try/catch, focam apenas na lógica de negócio
+- **Controllers Limpos**: Sem try/catch nos controllers, que delegam validação e erro ao middleware
 
 #### ✅ Separação de Responsabilidades
 
-- **Controllers**: Recebem requisições, chamam services, retornam respostas
-- **Services**: Contêm lógica de negócio e validações
-- **Middlewares**: Autenticação, validação, autorização
-- **Models**: Interação com banco de dados (Prisma)
+- **Controllers**: Recebem requisições, chamam services e retornam respostas
+- **Services**: Contêm lógica de negócio
+- **Middlewares**: Autenticação, validação e autorização
+- **Prisma**: Acesso ao banco e models
 
 #### ✅ Segurança
 
-- **JWT sem fallbacks**: Tokens seguros sem valores padrão hardcoded
-- **Hashing de senhas**: bcrypt para proteção de credenciais
-- **Validação de entrada**: Schemas com Zod para dados de entrada
-- **Middleware de autenticação**: Proteção de rotas sensíveis
+- **JWT**: Autenticação de token
+- **bcrypt**: Hashing de senhas
+- **Zod**: Validação de dados de entrada
+- **Middlewares**: Protegem rotas privadas e de administração
 
 ## 🔧 Instalação e Configuração
 
@@ -111,36 +113,36 @@ npm test
 
 ### Autenticação
 
-- `POST /api/sessions/login` - Login de usuário
-- `POST /api/sessions/register` - Registro de novo usuário
+- `POST /api/sessions` - Login de usuário
+- `POST /api/users` - Registro de usuário
 
 ### Produtos (requer autenticação)
 
 - `GET /api/products` - Listar produtos
 - `POST /api/products` - Criar produto (admin)
-- `PUT /api/products/:id` - Editar produto (admin)
+- `PATCH /api/products/:id` - Editar produto (admin)
 - `DELETE /api/products/:id` - Deletar produto (admin)
 
 ### Carrinho (requer autenticação)
 
 - `GET /api/cart` - Ver carrinho do usuário
 - `POST /api/cart` - Adicionar item ao carrinho
-- `PATCH /api/cart/:id` - Editar item do carrinho
-- `DELETE /api/cart/:id` - Deletar item do carrinho
-
-### Usuários (requer autenticação admin)
-
-- `PUT /api/users/:id/role` - Alterar role do usuário
+- `PATCH /api/cart/:id` - Atualizar item do carrinho
+- `DELETE /api/cart/:id` - Remover item do carrinho
 
 ### Pedidos (Orders) (requer autenticação)
 
 - `POST /api/orders` - Criar pedido a partir do carrinho do usuário
-- `GET /api/orders` - Listar pedidos do usuário (admin vê todos)
+- `GET /api/orders` - Listar pedidos do usuário
 - `GET /api/orders/:id` - Obter detalhes de um pedido
 
 ### Pagamentos (Payment) (requer autenticação)
 
 - `POST /api/payment/:id` - Registrar/confirmar pagamento de um pedido
+
+### Usuários / Admin
+
+- `PATCH /api/sessions/:id/role` - Alterar role do usuário (admin)
 
 ## 🔒 Autenticação e Autorização
 
@@ -150,27 +152,21 @@ npm test
 
 ## 🗄️ Banco de Dados
 
-O projeto utiliza Prisma ORM com PostgreSQL. As tabelas incluem:
+O projeto utiliza Prisma ORM com PostgreSQL. As tabelas principais incluem:
 
-- Users (usuários)
-- Products (produtos)
-- Carts (carrinhos)
-- CartItems (itens do carrinho)
-- Orders (pedidos)
-- Payments (pagamentos)
+- Users
+- Products
+- Carts
+- CartItems
+- Orders
+- Payments
 
 ## 🚀 Melhorias Recentes
 
-### v1.1.0 - Refatoração de Tratamento de Erros
-
-- ✅ Implementado error handler global
-- ✅ Removido try/catch repetitivo dos controllers
-- ✅ Padronização de respostas de erro
-- ✅ Melhor separação de responsabilidades
-- ✅ Segurança JWT aprimorada (sem fallbacks)
-- ✅ Testes atualizados para nova arquitetura
-- ✅ Novos módulos `orders` e `payment` implementados
-- ✅ Migrações Prisma adicionadas para `Order.status` e enum correspondente
+- ✅ Implementação dos módulos `orders` e `payment`
+- ✅ Migrações Prisma adicionadas para `Order.status`
+- ✅ Cobertura de testes para `modules/` e `middlewares/`
+- ✅ Tratamento de erros centralizado e validação com Zod
 
 ## 🤝 Contribuição
 
@@ -182,4 +178,4 @@ O projeto utiliza Prisma ORM com PostgreSQL. As tabelas incluem:
 
 ## 📝 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+Este projeto está sob a licença MIT.
