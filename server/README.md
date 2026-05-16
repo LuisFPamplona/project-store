@@ -137,12 +137,11 @@ npm test
 - `POST /api/orders` - Criar pedido a partir do carrinho do usuário
 - `GET /api/orders` - Listar pedidos do usuário (admin vê todos)
 - `GET /api/orders/:id` - Obter detalhes de um pedido
-- `PATCH /api/orders/:id/status` - Atualizar status do pedido (admin)
+ 
 
 ### Pagamentos (Payment) (requer autenticação)
 
-- `POST /api/payments` - Registrar/confirmar pagamento de um pedido
-- `GET /api/payments/:id` - Obter status de um pagamento
+- `POST /api/payment/:id` - Registrar/confirmar pagamento de um pedido
 
 ## 🔒 Autenticação e Autorização
 
@@ -171,8 +170,8 @@ O projeto utiliza Prisma ORM com PostgreSQL. As tabelas incluem:
 - ✅ Melhor separação de responsabilidades
 - ✅ Segurança JWT aprimorada (sem fallbacks)
 - ✅ Testes atualizados para nova arquitetura
- - ✅ Novos módulos `orders` e `payment` implementados
- - ✅ Migrações Prisma adicionadas para `Order.status` e enum correspondente
+- ✅ Novos módulos `orders` e `payment` implementados
+- ✅ Migrações Prisma adicionadas para `Order.status` e enum correspondente
 
 ## 🤝 Contribuição
 
