@@ -19,7 +19,7 @@ export const getCartService = async (userId: string) => {
     },
   });
 
-  if (!cart) {
+  if (!cart || cart.cartItems.length < 1) {
     throw new AppError("Cart not found", 404);
   }
 
@@ -100,11 +100,7 @@ export const removeFromCartService = async (
   return deletedProduct;
 };
 
-export const updateCartItemService = async (
-  productId: string,
-  userId: string,
-  quantity: number,
-) => {
+export const clearCart = async (userId: string) => {
   const cart = await prisma.cart.findUnique({
     where: { userId },
   });
@@ -113,20 +109,7 @@ export const updateCartItemService = async (
     throw new AppError("Cart not found", 404);
   }
 
-  const cartItem = await prisma.cartItem.findFirst({
-    where: { cartId: cart.id, productId },
+  await prisma.cartItem.deleteMany({
+    where: { cartId: cart.id },
   });
-
-  if (!cartItem) {
-    throw new AppError("Product not founded in cart", 404);
-  }
-
-  const updatedProduct = await prisma.cartItem.update({
-    where: { id: cartItem.id },
-    data: {
-      quantity,
-    },
-  });
-
-  return updatedProduct;
 };

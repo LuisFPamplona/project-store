@@ -3,6 +3,8 @@ import authRoutes from "./modules/auth/auth.routes";
 import userRoutes from "./modules/users/user.routes";
 import productsRoutes from "./modules/products/product.routes";
 import cartRoutes from "./modules/cart/cart.routes";
+import ordersRoutes from "./modules/orders/orders.routes";
+import paymentRoutes from "./modules/payment/payment.routes";
 import { errorHandler } from "./errors/errorHandler";
 
 const PORT = process.env.PORT || 3000;
@@ -18,6 +20,10 @@ app.use("/api/sessions", authRoutes);
 app.use("/api/products", productsRoutes);
 
 app.use("/api/cart", cartRoutes);
+
+app.use("/api/orders", ordersRoutes);
+
+app.use("/api/payment", paymentRoutes);
 
 app.use(errorHandler);
 
