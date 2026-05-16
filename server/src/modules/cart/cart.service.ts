@@ -19,14 +19,13 @@ export const getCartService = async (userId: string) => {
     },
   });
 
-  if (!cart || cart.cartItems.length < 1) {
+  if (!cart) {
     throw new AppError("Cart not found", 404);
   }
 
-  const totalPrices =
-    cart.cartItems.reduce((acc, item) => {
-      return acc + item.product.price * item.quantity;
-    }, 0) || 0;
+  const totalPrices = cart.cartItems.reduce((acc, item) => {
+    return acc + item.product.price * item.quantity;
+  }, 0);
 
   return { ...cart, totalPrices };
 };
@@ -112,4 +111,33 @@ export const clearCart = async (userId: string) => {
   await prisma.cartItem.deleteMany({
     where: { cartId: cart.id },
   });
+};
+
+export const updateCartItemService = async (
+  productId: string,
+  userId: string,
+  quantity: number,
+) => {
+  const cart = await prisma.cart.findUnique({
+    where: { userId },
+  });
+
+  if (!cart) {
+    throw new AppError("Cart not found", 404);
+  }
+
+  const cartItem = await prisma.cartItem.findFirst({
+    where: { cartId: cart.id, productId },
+  });
+
+  if (!cartItem) {
+    throw new AppError("Product not founded in cart", 404);
+  }
+
+  const updatedItem = await prisma.cartItem.update({
+    where: { id: cartItem.id },
+    data: { quantity },
+  });
+
+  return updatedItem;
 };

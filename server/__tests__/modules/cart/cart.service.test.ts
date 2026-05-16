@@ -1,11 +1,7 @@
 /// <reference types="jest" />
 
-import {
-  getCartService,
-  addToCardService,
-  removeFromCartService,
-  updateCartItemService,
-} from "../../../src/modules/cart/cart.service";
+const cartService = require("../../../src/modules/cart/cart.service");
+const { getCartService, addToCardService, removeFromCartService, updateCartItemService } = cartService;
 import { AppError } from "../../../src/errors/AppError";
 import { prisma } from "../../../src/lib/prisma";
 

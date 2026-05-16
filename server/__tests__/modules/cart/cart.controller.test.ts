@@ -7,12 +7,8 @@ import {
   removeFromCart,
   updateCartItem,
 } from "../../../src/modules/cart/cart.controller";
-import {
-  getCartService,
-  addToCardService,
-  removeFromCartService,
-  updateCartItemService,
-} from "../../../src/modules/cart/cart.service";
+const cartService = require("../../../src/modules/cart/cart.service");
+const { getCartService, addToCardService, removeFromCartService, updateCartItemService } = cartService;
 import { AppError } from "../../../src/errors/AppError";
 
 jest.mock("../../../src/modules/cart/cart.service");

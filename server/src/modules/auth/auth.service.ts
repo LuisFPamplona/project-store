@@ -3,11 +3,13 @@ import { prisma } from "../../lib/prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET environment variable is not set");
-}
+const getJwtSecret = () => {
+  const JWT_SECRET = process.env.JWT_SECRET;
+  if (!JWT_SECRET) {
+    throw new Error("JWT_SECRET environment variable is not set");
+  }
+  return JWT_SECRET;
+};
 
 export const register = async (
   name: string,
@@ -66,7 +68,7 @@ export const loginService = async (email: string, password: string) => {
 
   const token = jwt.sign(
     { id: user.id, email: user.email, role: user.role, cartId: user.cart.id },
-    JWT_SECRET,
+    getJwtSecret(),
     {
       expiresIn: "1h",
     },
